@@ -4,7 +4,7 @@ class Alien extends LitElement {
 
   static get properties(){
     return {
-      xpos: { attribute: 'xpos' },
+      xpos: { attribute: 'xpos',type: Number },
       type: { attribute: 'type' },
       ypos: { type: Number },
     };
@@ -14,6 +14,26 @@ class Alien extends LitElement {
     super();
     this.xpos = +this.getAttribute("xpos")
     this.ypos = 450
+    console.log("adding interval")
+    this.interval = setInterval(()=>{
+      this.bombs()
+    },1000)
+  }
+
+  disconnectedCallback(){
+    console.log("clear interval")
+    clearInterval(this.interval)
+  }
+
+  bombs(){
+    let frequency = 10 // 1 in ?
+    let shouldDrop = Math.round(Math.random()*frequency) == 1
+    if(shouldDrop){
+      let bomb = document.createElement("invaders-bomb")
+      bomb.setAttribute("xpos",+this.xpos+32)
+      bomb.setAttribute("ypos",+this.ypos+32)
+      if(this.parentNode) this.parentNode.appendChild(bomb)
+    }
   }
 
   render() {

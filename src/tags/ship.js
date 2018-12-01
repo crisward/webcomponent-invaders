@@ -1,54 +1,84 @@
-import { component,useState,useEffect } from '@matthewp/haunted'
-import { html } from 'lit-html'
+import {LitElement, html} from '@polymer/lit-element'
 
-customElements.define('invaders-ship',component(el=>{
-  const [deltax, setDeltax] = useState(0)
-  const [xpos,setXpos] = useState(35)
+class Ship extends LitElement {
 
-  const handleKey = (e =>{
-    if(e.key=="ArrowRight") setDeltax(5)
-    if(e.key=="ArrowLeft") setDeltax(-5)
-  })
+  static get properties(){
+    return {
+      xpos: { type: Number },
+      deltaX: { type: Number },
+    };
+  }
 
-  useEffect(()=>{
-    document.addEventListener("keyup",setDeltax.bind(this,0))
-    document.addEventListener("keydown",handleKey)
-    if(deltax!=0){
-      //requestAnimationFrame(()=>{
-        let newpos = xpos+deltax
-        if(newpos > 0 && newpos < 740){
-          setXpos(xpos+deltax)
+  constructor() {
+    super();
+    this.xpos = 0
+    this.keysPressed = {}
+    document.addEventListener("keydown",this.handleKey.bind(this),true)
+    document.addEventListener("keyup",this.handleKeyUp.bind(this))
+    this.move()
+  }
+
+  handleKey(e){
+    this.keysPressed[e.key]=true
+  }
+
+  handleKeyUp(e){
+    this.keysPressed[e.key]=false
+  }
+
+  shoot(){
+    this.shooting = true
+    let shot = document.createElement("invaders-shot")
+    shot.setAttribute("xpos",this.xpos+32)
+    this.parentNode.appendChild(shot)
+    setTimeout(()=>{this.shooting = false},100)
+  }
+
+  move(){
+    if(this.keysPressed[" "] && !this.shooting){
+      this.shoot();
+    }
+    if(this.keysPressed["ArrowRight"]){
+      this.deltaX = 10
+    }else if(this.keysPressed["ArrowLeft"]){
+      this.deltaX = -10
+    }else{
+      this.deltaX = 0
+    }
+    let newx = this.xpos + this.deltaX
+    requestAnimationFrame(()=>{
+      if(this.deltaX!=0 && newx >= 0 && newx <= 745){
+        this.xpos=newx
+      }
+      this.move()
+    })
+  }
+
+  render() {
+    return html`
+      <style> 
+        .ship{
+          display:block;
+          background:yellow;
+          width:80px;
+          height:30px;
+          position:absolute;
+          bottom:0px;
         }
-      //})
-    }
-    return ()=>{
-      document.removeEventListener("keyup",setDeltax.bind(this,0))
-      document.removeEventListener("keydown",handleKey)
-    }
-  })
+        .ship:before{
+          content:" ";
+          background:yellow;
+          position:absolute;
+          width: 10px;
+          height: 10px;
+          top:-10px;
+          left:35px;
+        }
+      </style>
+      <div class="ship" style="transform: translateX(${this.xpos}px)"></div>
+    `;
+  }
 
-  return html`
-    <style>
-      .ship{
-        display:block;
-        background:yellow;
-        width:80px;
-        height:30px;
-        position:absolute;
-        bottom:0px;
-        z-index: 1;
-        transform: translateZ(0.0001px);
-      }
-      .ship:before{
-        content:" ";
-        background:yellow;
-        position:absolute;
-        width: 10px;
-        height: 10px;
-        top:-10px;
-        left:35px;
-      }
-    </style>
-    <div class="ship" style="transform: translateX(${xpos}px)"></div>
-  `
-}))
+}
+
+export default customElements.define('invaders-ship',Ship)

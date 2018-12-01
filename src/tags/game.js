@@ -9,12 +9,17 @@ class Game extends LitElement {
 
   static get properties(){
     return {
-      score: { attribute: 'score' },
+      score: { attribute: 'score',type: Number  },
+      lives: { attribute: 'lives',type: Number  },
     };
   }
 
   addScore(points){
     this.score += +points
+  }
+
+  reduceLives(lives){
+    this.lives -= +lives
   }
 
   render() {
@@ -27,16 +32,28 @@ class Game extends LitElement {
           width:825px;
           height:500px;
           margin:75px auto;
+          font-family:arial black;
+        }
+        .infoblock{
+          width:300px;
+          height:50px;
+          margin:0 auto;
         }
         .score,.lives{
+          width:45%;
+          display:inline-block;
           color:white;
-          font-size:40px;
+          line-height:50px;
+          font-size:24px;
           text-align:center;
           z-index:2;
         }
         
       </style>
-      <div class="score">${this.score}</div>
+      <div class="infoblock">
+        <div class="score">SCORE ${this.score}</div>
+        <div class="lives">LIVES ${this.lives}</div>
+      </div>
       <slot></slot>
     `
   }

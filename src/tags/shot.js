@@ -12,7 +12,6 @@ export default class Shot extends LitElement {
   constructor() {
     super();
     this.ypos = 450
-    this.xpos = 
     this.move()
   }
 
