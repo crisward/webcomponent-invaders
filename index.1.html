@@ -1,0 +1,295 @@
+<!doctype html>
+<html>
+<head>
+  <title>Space Invaders</title>
+  <style>
+    body{
+      background-color:black;
+    }
+    #screen{
+      position: relative;
+      border:1px solid grey;
+      width:825px;
+      height:500px;
+      margin:75px auto;
+    }
+    #aliens{
+      position:absolute;
+      top:0;
+      left:0;
+    }
+    
+    .alien1,.alien2,.alien3,.saucer{
+      position:absolute;
+      background-blend-mode: multiply;
+      background-image:url(graphics.gif);
+      width: 75px;
+      height: 50px; 
+      background-size: 150px 150px;
+    }
+    .alien1{
+      background-color:mediumvioletred;
+      background-position: 73px -80px;
+    }
+    .alien2{
+      background-color:red;
+      background-position: 4px -32px;
+    }
+    .alien3{
+      background-color:cyan;
+      background-position: -9px -90px;
+    }
+    .saucer{
+      background-color:orange;
+      background-position: -70px 0px;
+    }
+    .tank{
+      background:yellow;
+      width:80px;
+      height:30px;
+      position:absolute;
+      bottom:0px;
+      /* transition: all 0.1s; */
+    }
+    .tank:before{
+      content:" ";
+      background:yellow;
+      position:absolute;
+      width: 10px;
+      height: 10px;
+      top:-10px;
+      left:35px;
+    }
+    .shot{
+      width:8px;
+      height:12px; 
+      background:white;
+      position: absolute;
+    }
+    #score,#lives{
+      color:white;
+      font-size:40px;
+      text-align:center;
+    }
+    .alienshot{
+      background:red;
+      position:absolute;
+      width:10px;
+      height:10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="score">Score: 0</div>
+
+  <div id="lives">Lives Remaining: 3</div>
+
+
+  <div id="screen">
+
+  </div>
+
+</body>
+
+<script>
+    var shots = [];
+    var score = 0;
+    var screenwidth = 825
+    var tankwidth = 80
+    var tankx = (screenwidth/2)-(tankwidth/2)
+    var tank_speed = 10;
+    var keysDown = []
+    var aliendelta = 1
+    var alienOffset = 0
+    var alienshotrate = 1
+    var gametime = 0
+    var lives = 3
+
+    function makeAliens(){
+      var aliens = []
+      for(let i=0;i<11;i++){
+        var x=i*75;
+        aliens.push({x:x,y:0,type:"alien1",hit:false})
+        aliens.push({x:x,y:75,type:"alien2",hit:false})
+        aliens.push({x:x,y:150,type:"alien2",hit:false})
+        aliens.push({x:x,y:225,type:"alien3",hit:false})
+        aliens.push({x:x,y:300,type:"alien3",hit:false})
+      }
+      return aliens;
+    }
+    
+    function drawaliens(aliens){
+      var html = aliens.map(function(alien){
+       var display = "block"
+       if(alien.hit){
+          display = "none"
+        }
+        return '<div class="'+alien.type+'" style="top:'+alien.y+'px;left:'+alien.x+'px;display:'+display+'"></div>'
+      }).join("")
+      return html
+    }
+    function drawtank(x){
+      return '<div class="tank" style="left:'+x+'px"></div>'
+    }
+    function drawshots(){
+      var html = shots.map(function(shot){
+        return '<div class="shot" style="top:'+shot.y+'px;left:'+shot.x+'px"></div>'
+      }).join("")
+      return html;
+    }
+
+    var aliens = makeAliens();
+    
+    document.addEventListener("keydown",function(ev){
+      if(keysDown.indexOf(ev.key)==-1){
+        keysDown.push(ev.key)
+      }
+      if(ev.key==" "){
+        fireshot()
+      }
+    })
+    document.addEventListener("keyup",function(ev){
+      var index =  keysDown.indexOf(ev.key)
+      keysDown.splice(index,1)
+    })
+
+    function checkKeys(){
+      if(keysDown.indexOf("ArrowLeft")>-1){
+        tankx-=tank_speed;
+        if(tankx<0){
+          tankx = 0;
+        }
+      }
+      if(keysDown.indexOf("ArrowRight")>-1){
+        tankx-=-tank_speed;
+        if(tankx>screenwidth-tankwidth){
+          tankx = screenwidth-tankwidth
+        }
+      }
+    }
+
+    function updateTank(){
+      document.querySelector(".tank").style.left = tankx+"px"
+    }
+
+    function updateShots(){
+      var shotdivs = document.querySelectorAll(".shot")
+      var alienshots = document.querySelectorAll(".alienshot")
+      
+      for(var i=0;i<shotdivs.length;i++){
+        var top = (shotdivs[i].offsetTop - 10)
+        if(top > 0){
+          shotdivs[i].style.top = top+"px"
+          var hasHit = didHit(shotdivs[i].offsetLeft,shotdivs[i].offsetTop)
+        }
+        if(top <= 0 || hasHit){
+          shotdivs[i].parentNode.removeChild(shotdivs[i]);
+        }
+      }
+
+      for(var i=0;i<alienshots.length;i++){
+        var top = (alienshots[i].offsetTop +5)
+        if(top < 500){
+          alienshots[i].style.top = top+"px"
+          var hasHit = didHitPlayer(alienshots[i].offsetLeft,alienshots[i].offsetTop)
+        }
+        if(top >= 500 || hasHit){
+          alienshots[i].parentNode.removeChild(alienshots[i]);
+        }
+      }
+
+    }
+
+    function updateScore(){
+      document.querySelector("#score").innerHTML = "Score: "+score
+    }
+    function updateLives(){
+      document.querySelector("#lives").innerHTML = "Lives Remaining: "+lives
+    }
+    function didHit(x,y){
+      var hasHit = false;
+      aliens = aliens.map(function(alien){
+        var alien_x = alien.x + alienOffset
+        if(alien.hit ==  false && x > alien_x && x < alien_x+75 && y > alien.y && y < alien.y+50){
+          alien.hit = true;
+          if(alien.type=="alien1") score += 30
+          if(alien.type=="alien2") score += 20
+          if(alien.type=="alien3") score += 10
+          updateScore()
+          hasHit = true;
+        }
+        return alien;
+      })
+      if(hasHit){
+        document.querySelector("#aliens").innerHTML = drawaliens(aliens);
+      }
+      return hasHit;
+    }
+
+    function didHitPlayer(x,y){
+      if(x>tankx-40 && x<tankx+40 && y > 470){
+        lives-=1;
+        updateLives()
+        return true;
+      }
+    }
+
+    function fireshot(){
+      var x = tankx + (tankwidth/2) - 4;
+      var y = 500 - 40;
+      document.querySelector("#screen").innerHTML+='<div class="shot" style="top:'+y+'px;left:'+x+'px;"></div>'
+    }
+
+    function alienmove(){
+      var aliensdiv=document.querySelector("#aliens")
+      var x = aliensdiv.offsetLeft+aliendelta;
+      if(x>100 || x < -100){
+        aliendelta= 0-aliendelta;
+      }
+      alienOffset = x
+      aliensdiv.style.left=x+"px"
+    }
+
+    function alienShooting(){
+      var rand = Math.random()
+      if(rand< alienshotrate /100){
+        alien = pickRandomAlien()
+        if (alien && alien.hit==false) alienShoot(alien)
+      }
+      alienshotrate = Math.round( gametime / 300) + 1
+    }
+
+    function alienShoot(alien){
+      var x = alien.x + 32 + alienOffset;
+      var y = alien.y + 50
+      document.querySelector("#screen").innerHTML+='<div class="alienshot" style="top:'+y+'px;left:'+x+'px;"></div>'
+    }
+
+    function pickRandomAlien(){
+      var index = Math.round(aliens.length * Math.random())
+      return aliens[index]
+    }
+    
+    function draw(){
+      checkKeys()
+      updateTank()
+      updateShots()
+      alienmove()
+      alienShooting()
+    }
+
+
+    function gameloop(timestamp) {
+      draw()
+      gametime += 1
+      window.requestAnimationFrame(gameloop)
+    }
+    var html = '<div id="aliens">'+drawaliens(aliens)+'</div>'+drawtank(tankx)
+    document.querySelector("#screen").innerHTML = html;
+    var oldhtml="";
+    var lastRender = 0;
+    window.requestAnimationFrame(gameloop)
+
+  </script>
+</html>
