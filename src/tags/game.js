@@ -59,6 +59,6 @@ class Game extends LitElement {
   }
 }
 
-customElements.define('invaders-game',Game)
+export default customElements.define('invaders-game',Game)
 
 //<invaders-alien xpos="200" ypos="50" type="alien1"></invaders-alien>

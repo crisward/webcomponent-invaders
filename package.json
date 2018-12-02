@@ -22,12 +22,11 @@
   "devDependencies": {
     "@babel/preset-env": "^7.1.6",
     "@matthewp/haunted": "^2.2.0",
-    "coffeescript": "^2.3.2",
     "lit-html": "^0.13.0",
     "rollup": "^0.67.3",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-babel-minify": "^6.2.0",
-    "rollup-plugin-coffee-script": "^2.0.0",
-    "rollup-plugin-commonjs": "^9.2.0"
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0"
   }
 }

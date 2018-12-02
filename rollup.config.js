@@ -3,13 +3,11 @@ import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import minify from "rollup-plugin-babel-minify"
-import coffee from 'rollup-plugin-coffee-script';
 
 // Modern Browsers
 const plugins = [
-  coffee(),
-  nodeResolve({ extensions: ['.js', '.coffee'] }),
-  commonjs({extensions: ['.js', '.coffee']}),
+  nodeResolve({ extensions: ['.js'] }),
+  commonjs({extensions: ['.js',]}),
 ]
 // Production Stuff
 if(process.env.NODE_ENV == "production"){
@@ -18,20 +16,20 @@ if(process.env.NODE_ENV == "production"){
 // IE and Edge conversions
 const es5_plugins = plugins.concat([
   babel({
-    extensions: ['.js', '.coffee'],
+    extensions: ['.js'],
     presets: [['@babel/preset-env',{"useBuiltIns": "entry","targets": "ie >= 11"}]],
   }),
 ])
 
 export default [{
-  input:"./src/app.coffee",
+  input:"./src/app.js",
   output:{
     file:"./build/app.js",
     format: "iife"
   },
   plugins: plugins,
 },{
-  input:"./src/app.coffee",
+  input:"./src/app.js",
   output:{
     file:"./build/app.es5.js",
     format: "iife"

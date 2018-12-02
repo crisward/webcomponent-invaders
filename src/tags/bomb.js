@@ -1,6 +1,6 @@
 import {LitElement, html} from '@polymer/lit-element'
 
-export default class Bomb extends LitElement {
+class Bomb extends LitElement {
 
   static get properties(){
     return {
@@ -56,4 +56,4 @@ export default class Bomb extends LitElement {
 
 }
 
-customElements.define('invaders-bomb',Bomb)
+export default customElements.define('invaders-bomb',Bomb)

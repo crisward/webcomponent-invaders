@@ -66,4 +66,4 @@ class Aliens extends LitElement {
   }
 }
 
-customElements.define('invaders-aliens',Aliens)
+export default customElements.define('invaders-aliens',Aliens)
