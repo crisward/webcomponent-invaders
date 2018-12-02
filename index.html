@@ -23,5 +23,24 @@
     </invaders-game>
 </body>
 
-  <script src="build/app.js"></script>
+<script type="text/javascript">
+  // only load polyfills if required
+  function addScript(src){
+    var js = document.createElement("script");
+    js.type = "text/javascript";
+    js.src = src; 
+    head.appendChild(js);
+  }
+  var head = document.querySelector('head');
+  if(window.customElements){
+    addScript("/build/app.js");
+  }else{
+    addScript("https://unpkg.com/@webcomponents/webcomponentsjs@2.2.1/webcomponents-loader.js");
+    addScript("https://unpkg.com/@webcomponents/webcomponentsjs@2.2.1/custom-elements-es5-adapter.js");
+    addScript("https://cdn.jsdelivr.net/npm/proxy-polyfill@0.3.0/proxy.min.js");
+    window.addEventListener("load",function(){
+      addScript("/build/app.es5.js");
+    })
+  }
+</script>
 </html>
