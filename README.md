@@ -1,28 +1,15 @@
-# Hyper-Coffee
+# Invaders
 
-Called this because I started messing with coffeescript with hyperHTML.
-However this evolved into using Haunted, with lit-html....
-Basically a super small framework, mixing some new ideas together to build very simple webcomponents.
-Also using roll-up, well why not?
+A quick mess with webcomponents, using lit-html / lit-element. Just a recreation of classic space-invaders.
 
-## What's Good
-
-* Shadow DOM
-* Re-usable
-* Simple State Model
-* Very small when bundled
-* Composable - compoents in components
-
-## What's Bad
-* Lacking ways to easily communicate between components
-* Very young
-* Much smaller audience (bit like riot)
+Seems pretty quick. Only very basic functionality in place, but proves rendering is reasonably performant. Based on a vanilla js version I did of this (see index.1.html).
 
 ## Using
 
 ```
 npm install
 npm run build
+npm start
 open index.html
 ```
 
