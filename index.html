@@ -25,6 +25,7 @@
 
 <script type="text/javascript">
   // only load polyfills if required
+  window.process = {env: {NODE_ENV: 'production'}} // hack for redux thunk
   function addScript(src){
     var js = document.createElement("script");
     js.type = "text/javascript";

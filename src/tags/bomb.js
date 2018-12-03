@@ -1,4 +1,6 @@
 import {LitElement, html} from '@polymer/lit-element'
+import { store } from '../store.js';
+import {reduceLives} from '../actions.js'
 
 class Bomb extends LitElement {
 
@@ -27,7 +29,7 @@ class Bomb extends LitElement {
         let tagname = hit && hit.tagName.toLowerCase() || ""
         // when bomb hits ship
         if(tagname=="invaders-ship"){
-          document.querySelector("invaders-game").reduceLives(1)//.addScore(1)
+          store.dispatch(reduceLives(1))
           //hit.remove() - don't remove shop, perhaps add a die event to it, so it knows to blow up
           this.remove()
           return

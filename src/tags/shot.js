@@ -1,4 +1,6 @@
 import {LitElement, html} from '@polymer/lit-element'
+import { store } from '../store.js';
+import {increaseScore} from '../actions.js'
 
 class Shot extends LitElement {
 
@@ -25,7 +27,7 @@ class Shot extends LitElement {
         let tagname = hit && hit.tagName.toLowerCase() || ""
         // when shot hits alien
         if(tagname=="invaders-alien"){
-          document.querySelector("invaders-game").addScore(1)//.addScore(1)
+          store.dispatch(increaseScore(1))
           hit.remove()
           this.remove()
           return

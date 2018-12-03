@@ -1,6 +1,8 @@
 import {LitElement, html} from '@polymer/lit-element'
+import { store } from '../store.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
-class Game extends LitElement {
+class Game extends connect(store)(LitElement) {
 
   constructor() {
     super();
@@ -14,12 +16,9 @@ class Game extends LitElement {
     };
   }
 
-  addScore(points){
-    this.score += +points
-  }
-
-  reduceLives(lives){
-    this.lives -= +lives
+  stateChanged(state) {
+    this.score = state.app.score
+    this.lives = state.app.lives
   }
 
   render() {
