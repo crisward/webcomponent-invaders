@@ -64,7 +64,7 @@ class Alien extends LitElement {
           background-position: -70px 0px;
         }
       </style>
-      <div class="alien ${this.type}" style="top:${this.ypos}px;left:${this.xpos}px"></div>
+      <div class="alien ${this.type}" style="transform: translate(${this.xpos}px,${this.ypos}px)"></div>
     `;
   }
 }

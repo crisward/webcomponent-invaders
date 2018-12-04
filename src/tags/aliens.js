@@ -51,7 +51,7 @@ class Aliens extends connect(store)(LitElement) {
           width:800px;
         }
     </style>
-    <div class="aliens" style="top:${this.ypos}px;left:${this.xpos}px">
+    <div class="aliens" style="transform:translate(${this.xpos}px,${this.ypos}px)">
       ${repeat(this.aliens, (alien)=> alien.id, (alien)=> html`
         <invaders-alien xpos="${alien.xpos}" ypos="${alien.ypos}" type="${alien.type}"></invaders-alien>
       `)}
