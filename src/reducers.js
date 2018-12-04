@@ -1,9 +1,3 @@
-import {
-  UPDATE_SCORE,
-  UPDATE_LIVES,
-  REDUCE_LIVES,
-  INCRESE_SCORE,
-} from './actions.js';
 
 const INITIAL_STATE = {
   score: 0,
@@ -11,30 +5,14 @@ const INITIAL_STATE = {
 };
 
 const app = (state = INITIAL_STATE, action) => {
-  switch (action.type) {
-    case UPDATE_SCORE:
-      return {
-        ...state,
-        score: action.value
-      };
-    case UPDATE_LIVES:
-      return {
-        ...state,
-        lives: action.value
-      };
-    case REDUCE_LIVES:
-      return {
-        ...state,
-        lives: state.lives - action.value
-      };
-    case INCRESE_SCORE:
-      return {
-        ...state,
-        score: state.score + action.value
-      };
-    default:
-      return state;
+  const reducers = {
+    'UPDATE_SCORE':(value)=> ({...state,score: value}),
+    'UPDATE_LIVES':(value)=> ({...state,lives: value}),
+    'REDUCE_LIVES':(value)=> ({...state,lives: state.lives - value}),
+    'INCRESE_SCORE':(value)=> ({...state,score: state.score + value}),
   }
-};
+  return reducers[action.type] ? reducers[action.type](action.value) : state
+}
+
 
 export default app;
