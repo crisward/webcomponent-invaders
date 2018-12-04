@@ -2,6 +2,7 @@
 const INITIAL_STATE = {
   score: 0,
   lives: 3,
+  ship_x:0,
   aliens:[],
 };
 
@@ -14,6 +15,7 @@ const app = (state = INITIAL_STATE, action) => {
     'INCRESE_SCORE':(value)=> ({...state,score: state.score + value}),
     'ADD_ALIEN':(value)=> ({...state,aliens: state.aliens.concat(value)}),
     'REMOVE_ALIEN':(value)=> ({...state,aliens: state.aliens.filter(alien => alien!=value )}),
+    'SHIP_MOVE':(value)=>({...state,ship_x: state.ship_x + value}),
   }
   return reducers[action.type] ? reducers[action.type](action.value) : state
 }

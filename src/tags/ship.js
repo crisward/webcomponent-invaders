@@ -1,6 +1,9 @@
 import {LitElement, html} from '@polymer/lit-element'
+import { store } from '../store.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
+import { shipMove } from '../actions.js'
 
-class Ship extends LitElement {
+class Ship extends connect(store)(LitElement) {
 
   static get properties(){
     return {
@@ -38,20 +41,18 @@ class Ship extends LitElement {
     if(this.keysPressed[" "] && !this.shooting){
       this.shoot();
     }
-    if(this.keysPressed["ArrowRight"]){
-      this.deltaX = 10
-    }else if(this.keysPressed["ArrowLeft"]){
-      this.deltaX = -10
-    }else{
-      this.deltaX = 0
+    if(this.keysPressed["ArrowRight"] && this.xpos < 745){
+      store.dispatch(shipMove(10))
+    }else if(this.keysPressed["ArrowLeft"] && this.xpos > 0){
+      store.dispatch(shipMove(-10))
     }
-    let newx = this.xpos + this.deltaX
     requestAnimationFrame(()=>{
-      if(this.deltaX!=0 && newx >= 0 && newx <= 745){
-        this.xpos=newx
-      }
       this.move()
     })
+  }
+
+  stateChanged(state) {
+    this.xpos = state.app.ship_x
   }
 
   render() {

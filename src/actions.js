@@ -13,3 +13,6 @@ export const reduceLives = (value) => (
 export const addAlien = (value) => (
   {type: 'ADD_ALIEN',value: value}
 )
+export const shipMove = (value)=>(
+  {type: 'SHIP_MOVE',value: value}
+)
