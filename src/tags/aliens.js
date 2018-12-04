@@ -1,6 +1,9 @@
 import {LitElement, html} from '@polymer/lit-element'
+import { repeat } from '@polymer/lit-element/node_modules/lit-html/directives/repeat'
+import { store } from '../store.js';
+import { connect } from 'pwa-helpers/connect-mixin.js';
 
-class Aliens extends LitElement {
+class Aliens extends connect(store)(LitElement) {
 
   static get properties() {
     return {
@@ -15,10 +18,6 @@ class Aliens extends LitElement {
     this.ypos = 0
     this.deltaX = 1
     this.move()
-  }
-
-  firstUpdated(){
-    this.addAliens()
   }
 
   move(){
@@ -37,17 +36,10 @@ class Aliens extends LitElement {
     })
   }
 
-  addAliens(){
-    for(let y = 1; y<4; y+=1){
-      for(let x = 50; x < 700; x+=80){
-        let alien = document.createElement("invaders-alien")
-        alien.setAttribute("xpos",x)
-        alien.setAttribute("ypos",(y*70)-70)
-        alien.setAttribute("type","alien"+y)
-        this.appendChild(alien)
-      }
-    }
+  stateChanged(state) {
+    this.aliens = state.app.aliens
   }
+  
 
   render() {
     return html`
@@ -60,7 +52,9 @@ class Aliens extends LitElement {
         }
     </style>
     <div class="aliens" style="top:${this.ypos}px;left:${this.xpos}px">
-      <slot></slot>
+      ${repeat(this.aliens, (alien)=> alien.id, (alien)=> html`
+        <invaders-alien xpos="${alien.xpos}" ypos="${alien.ypos}" type="${alien.type}"></invaders-alien>
+      `)}
     </div>
     `
   }

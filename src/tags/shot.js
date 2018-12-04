@@ -22,16 +22,16 @@ class Shot extends LitElement {
     requestAnimationFrame(()=>{
       this.ypos=newy
       if(newy > 0){
-        let {x,y} = this.parentNode.getBoundingClientRect() 
-        let hit = document.elementFromPoint(x+ +this.xpos,y+ +this.ypos)
-        let tagname = hit && hit.tagName.toLowerCase() || ""
-        // when shot hits alien
-        if(tagname=="invaders-alien"){
-          store.dispatch(increaseScore(1))
-          hit.remove()
-          this.remove()
-          return
-        }
+        // let {x,y} = this.parentNode.getBoundingClientRect() 
+        // let hit = document.elementFromPoint(x+ +this.xpos,y+ +this.ypos)
+        // let tagname = hit && hit.tagName.toLowerCase() || ""
+        // // when shot hits alien
+        // if(tagname=="invaders-alien"){
+        //   store.dispatch(increaseScore(1))
+        //   hit.remove()
+        //   this.remove()
+        //   return
+        // }
         this.move()
         return
       }

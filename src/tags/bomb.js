@@ -24,16 +24,16 @@ class Bomb extends LitElement {
     requestAnimationFrame(()=>{
       this.ypos=newy
       if(newy < 490){
-        let {x,y} = this.parentNode.getBoundingClientRect() 
-        let hit = document.elementFromPoint(x+ +this.xpos,y+ +this.ypos)
-        let tagname = hit && hit.tagName.toLowerCase() || ""
-        // when bomb hits ship
-        if(tagname=="invaders-ship"){
-          store.dispatch(reduceLives(1))
-          //hit.remove() - don't remove shop, perhaps add a die event to it, so it knows to blow up
-          this.remove()
-          return
-        }
+        // let {x,y} = this.parentNode.getBoundingClientRect() 
+        // let hit = document.elementFromPoint(x+ +this.xpos,y+ +this.ypos)
+        // let tagname = hit && hit.tagName.toLowerCase() || ""
+        // // when bomb hits ship
+        // if(tagname=="invaders-ship"){
+        //   store.dispatch(reduceLives(1))
+        //   //hit.remove() - don't remove shop, perhaps add a die event to it, so it knows to blow up
+        //   this.remove()
+        //   return
+        // }
         this.move()
         return
       }

@@ -10,3 +10,6 @@ export const increaseScore = (value) => (
 export const reduceLives = (value) => (
   {type: 'REDUCE_LIVES',value: value}
 )
+export const addAlien = (value) => (
+  {type: 'ADD_ALIEN',value: value}
+)

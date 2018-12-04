@@ -1,12 +1,14 @@
 import {LitElement, html} from '@polymer/lit-element'
 import { store } from '../store.js';
 import { connect } from 'pwa-helpers/connect-mixin.js';
+import {addAlien} from '../actions.js'
 
 class Game extends connect(store)(LitElement) {
 
   constructor() {
     super();
     this.score = 0
+    this.addAliens() // perhaps have a start game button
   }
 
   static get properties(){
@@ -14,6 +16,21 @@ class Game extends connect(store)(LitElement) {
       score: { attribute: 'score',type: Number  },
       lives: { attribute: 'lives',type: Number  },
     };
+  }
+
+  addAliens(){
+    let id = 0
+    for(let y = 1; y<4; y+=1){
+      for(let x = 50; x < 700; x+=80){
+        store.dispatch(addAlien({
+          id: id,
+          xpos: x,
+          ypos: (y*70)-70,
+          type: "alien"+y,
+        }))
+        id++
+      }
+    }
   }
 
   stateChanged(state) {
